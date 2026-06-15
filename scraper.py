@@ -98,6 +98,11 @@ def _buscar_termo(termo: str, limite: int = 20) -> list[dict]:
                 "--no-sandbox",
                 "--disable-setuid-sandbox",
                 "--disable-blink-features=AutomationControlled",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+                "--single-process",
+                "--no-zygote",
+                "--disable-software-rasterizer",
             ]
         )
         context = browser.new_context(
@@ -113,12 +118,12 @@ def _buscar_termo(termo: str, limite: int = 20) -> list[dict]:
 
         url = f"https://www.google.com/maps/search/{termo.replace(' ', '+')}"
         print(f"[INFO] Acessando: {url}")
-        page.goto(url, wait_until="domcontentloaded", timeout=60000)
-        time.sleep(4)
+        page.goto(url, wait_until="networkidle", timeout=30000)
+        time.sleep(2)
 
         lista_seletor = 'div[role="feed"]'
         try:
-            page.wait_for_selector(lista_seletor, timeout=20000)
+            page.wait_for_selector(lista_seletor, timeout=10000)
         except Exception:
             print("[AVISO] Lista de resultados não encontrada.")
             browser.close()
