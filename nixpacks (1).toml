@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = ["gcc", "g++", "python312"]
+
+[phases.install]
+cmds = [
+  "pip install --only-binary=:all: greenlet || pip install greenlet --no-build-isolation",
+  "pip install -r requirements.txt",
+  "playwright install chromium",
+  "playwright install-deps chromium",
+]
+
+[start]
+cmd = "uvicorn main:app --host 0.0.0.0 --port $PORT"
